@@ -60,12 +60,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 manager.getNewsHeadLines(listener, "general", query);
 
                 return true;
+
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
+
         });
 
 

@@ -45,7 +45,9 @@ public class UserViewModel extends AndroidViewModel {
         new InsertAsyncTask((Dao) userDao).execute(user);
     }
 
-    public LiveData<List<User>> getAlldata() {
+    public void deleteWord(User user) {repo.deleteWord(user);}
+
+        public LiveData<List<User>> getAlldata() {
         return mAllUsers;
     }
 
@@ -82,5 +84,19 @@ public class UserViewModel extends AndroidViewModel {
             return null;
         }
     }
+
+    private class DeleteAsyncTask extends OperationsAsyncTask {
+
+        DeleteAsyncTask(Dao mNoteDao) {
+            super((DAO) mNoteDao);
+        }
+
+        @Override
+        protected Void doInBackground(User... notes) {
+            userDao.delete(notes[0]);
+            return null;
+        }
+    }
+
 
 }

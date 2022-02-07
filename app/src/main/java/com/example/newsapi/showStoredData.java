@@ -3,15 +3,19 @@ package com.example.newsapi;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -28,6 +32,8 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.newsapi.DB.MyDataBase;
 import com.example.newsapi.DB.User;
+import com.example.newsapi.Models.NewzApiResponse;
+import com.example.newsapi.Models.NewzzHeadlines;
 import com.example.newsapi.viewModel.UserViewModel;
 
 import java.io.File;
@@ -40,7 +46,11 @@ public class showStoredData extends AppCompatActivity {
     private static final int NEW_USER_ACTIVITY_REQUEST_CODE = 1;
     private final String TAG = this.getClass().getSimpleName();
     UserViewModel modelView;
-    AdapterForRoomDatabase adap;
+    public AdapterForRoomDatabase adap;
+
+    private ProgressDialog dailog;
+
+    SearchView searchView;
     RecyclerView recyclerView;
     public static Context ctx;
 
@@ -53,6 +63,57 @@ public class showStoredData extends AppCompatActivity {
         adap = new AdapterForRoomDatabase(this );
         recyclerView.setAdapter(adap);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        dailog = new ProgressDialog(this);
+        dailog.setTitle("Please Wait");
+        dailog.show();
+
+        ItemTouchHelper helper = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder,
+                                          RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder,
+                                         int direction) {
+                        int position = viewHolder.getAdapterPosition();
+                        User user = adap.getWordAtPosition(position);
+                        Toast.makeText(showStoredData.this, "Deleting Data ", Toast.LENGTH_SHORT).show();
+
+                        // Delete the word
+                        modelView.deleteWord(user);
+                    }
+                });
+
+        helper.attachToRecyclerView(recyclerView);
+
+       /* searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+               *//* dailog.setTitle("Please Wait!!! ");
+                dailog.show();
+                RequestManager manager = new RequestManager(showStoredData.this);
+
+                manager.getNewsHeadLines(  , "general", query);*//*
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+
+
+                return true;
+            }
+        });*/
 
         modelView = new ViewModelProvider(this).get(UserViewModel.class);
 
@@ -67,7 +128,9 @@ public class showStoredData extends AppCompatActivity {
 
     }
 
-    public static void saveImage(Bitmap bit, File dir, String fileName) {
+
+
+   /* public static void saveImage(Bitmap bit, File dir, String fileName) {
 
         boolean successDirCreated = false;
         if(dir.exists()) {
@@ -92,9 +155,9 @@ public class showStoredData extends AppCompatActivity {
             Toast.makeText(ctx, "Failed To Make Folder!", Toast.LENGTH_SHORT).show();
         }
 
-    }
+    }*/
 
-    public static boolean verifyPermission() {
+   /* public static boolean verifyPermission() {
 
         int permissionExternalMemory = ActivityCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if(permissionExternalMemory != PackageManager.PERMISSION_GRANTED) {
@@ -103,9 +166,9 @@ public class showStoredData extends AppCompatActivity {
             return false;
         }
         return true;
-    }
+    }*/
 
-    void downloadImage(String imageURL){
+  /*  void downloadImage(String imageURL){
 
         if (!verifyPermission()) {
             return;
@@ -141,7 +204,7 @@ public class showStoredData extends AppCompatActivity {
                     }
                 });
 
-    }
+    }*/
 
    /* public void getAllDataFromRoomDatabase(View view) {
         LiveData<List<User>> userList = MyDataBase.getInstance(getApplicationContext()).dao().getAllUser();

@@ -1,7 +1,11 @@
 package com.example.newsapi;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -10,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -18,10 +23,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.bumptech.glide.Glide;
 import com.example.newsapi.DB.Converters;
+import com.example.newsapi.DB.MyDataBase;
 import com.example.newsapi.DB.User;
+import com.example.newsapi.Models.NewzzHeadlines;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -36,10 +44,13 @@ import java.util.zip.Inflater;
 class AdapterForRoomDatabase extends RecyclerView.Adapter<AdapterForRoomDatabase.RoomViewHolder> {
 
     private static Context context;
-    private List<User> usersList;
+    public List<User> usersList;
 
     public AdapterForRoomDatabase(Context context) {
         this.context = context;
+    }
+
+    public AdapterForRoomDatabase(Context applicationContext, List<NewzzHeadlines> list) {
     }
 
     @NonNull
@@ -68,6 +79,9 @@ class AdapterForRoomDatabase extends RecyclerView.Adapter<AdapterForRoomDatabase
 
                 Boolean focusable = true;
                 final PopupWindow popuP = new PopupWindow(popup, width, height, focusable);
+                View view;
+                Button btn = (Button) popup.findViewById(R.id.savedata);
+                btn.setVisibility(View.GONE);
 
                 popuP.showAtLocation(v,
                         Gravity.CENTER,
@@ -79,17 +93,46 @@ class AdapterForRoomDatabase extends RecyclerView.Adapter<AdapterForRoomDatabase
                 TextView forAuthor = (TextView) popup.findViewById(R.id.AuthorName);
                 TextView forDesc = (TextView) popup.findViewById(R.id.newscomplete);
 
-                /*image.setImageBitmap(Converters.convertByteArray2Image(usersList.get(position).ImagesData));*/
-
-                /*if(usersList.get(position).getImagesData()!= null) {
-                    image.setImageURI(Uri.parse(usersList.get(position).getImagesData()));
-                }*/
-
                 Glide.with(context).load(usersList.get(position).getImageUrl()).into(image);
                 forAuthor.setText(usersList.get(position).getFirstName());
                 forDesc.setText(usersList.get(position).getLastName());
-                /*image.setImageBitmap(Converters.convertByteArray2Image(usersList.get(position).ImagesData));*/
 
+            }
+        });
+
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                MyDataBase INSTANCE;
+                final String DATABASE_NAME = "MyDataBase";
+
+                INSTANCE = Room.databaseBuilder(context.getApplicationContext(), MyDataBase.class,DATABASE_NAME)/*.addTypeConverter(con)*/.allowMainThreadQueries().fallbackToDestructiveMigration().build();
+
+                Dialog dd = new Dialog(context,R.style.Widget_AppCompat_Light_ActionBar);
+
+
+                AlertDialog.Builder dialogBuilder;
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(holder.itemView.getContext());
+                alertDialog.setTitle(" Delete Data");
+                alertDialog.setMessage("Are you sure. You ant to delete this data")
+                        .setPositiveButton(R.string.Sure , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+
+                    }
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+
+                return true;
             }
         });
     }
@@ -101,6 +144,10 @@ class AdapterForRoomDatabase extends RecyclerView.Adapter<AdapterForRoomDatabase
         }else{
             return 0;
         }
+    }
+
+    public User getWordAtPosition(int position) {
+        return usersList.get(position);
     }
 
     public void setUserList (List<User> users) {
@@ -120,7 +167,7 @@ class AdapterForRoomDatabase extends RecyclerView.Adapter<AdapterForRoomDatabase
 
             forAuthor = itemView.findViewById(R.id.text_source);
             forDesc = itemView.findViewById(R.id.text_title);
-            ImageRDB = itemView.findViewById(R.id.image_data);
+            ImageRDB = itemView.findViewById(R.id.image_headlines);
 
         }
 
@@ -139,28 +186,26 @@ class AdapterForRoomDatabase extends RecyclerView.Adapter<AdapterForRoomDatabase
         public void setData (String authorName, String Desc, String imgUri, int position) {
             forDesc.setText(Desc);
             forAuthor.setText(authorName);
-            Picasso.get().load(imgUri).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
-                }
-
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            });
-            /*Picasso.get().load(imgData).into(ImageRDB);*/
-            /*Glide.with(AdapterForRoomDatabase.context).load(imgUri).into(ImageRDB);*/
-           /* Glide.with(context).load(imgUri).apply(  ).into(ImageRDB);
-            String imgData = imgUri;*/
-            /*ImageRDB.setImageURI(Uri.parse(*//*imgData.toString()*//*));*/
+            Glide.with(context).load(imgUri).into(ImageRDB);
             mPosition = position;
+
+            /*Picasso.get().load(imgUri).into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });*/
+
         }
     }
 }

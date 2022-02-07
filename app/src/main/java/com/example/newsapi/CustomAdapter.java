@@ -116,21 +116,12 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
                 Button saveData = (Button) popup.findViewById(R.id.savedata);
 
                 if(headlines.get(position).getUrlToImage() != null){
-                    if(headlines.get(position).getAuthor() != null){
-                        Picasso.get().load(headlines.get(position).getUrlToImage()).into(image);
-                    }
-                }else{
-                    image.setVisibility(View.GONE);
+                    Picasso.get().load(headlines.get(position).getUrlToImage()).into(image);
                 }
 
                 String imgData = headlines.get(position).getUrlToImage();
                 forAuthor.setText(headlines.get(position).getAuthor());
                 forDesc.setText(headlines.get(position).getDescription());
-
-                /*Bitmap pic = null;
-                pic = BitmapFactory.decodeFile(headlines.get(position).getUrlToImage());*/
-
-               /* String imageData = Glide.with(context).load(headlines.get(position).getUrlToImage()).into(image).toString();*/
 
                 String imageData = imgData;
                 String AuthorName = forAuthor.getText().toString();
@@ -143,103 +134,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
                         User user = new User();
 
-                       /* Glide.with(context)
-                                .load(headlines.get(position).getUrlToImage())
-                                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                                .preload();*/
-
-                        /*Converters.convertImage2ByteArray(bitmap);*/
-
-                        /*user.ImagesData = Glide.with(context).load(headlines.get(position).getUrlToImage()).*/
-
-                       /* Glide.with(context)
-                                .load(headlines.get(position).getUrlToImage())
-                                .into(image).
-                                .into(new SimpleTarget<Bitmap>(100,100) {
-                                    @Override
-                                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation)  {
-                                        saveImage(resource);
-                                    }
-                                });*/
-                      /*  user.ImagesData = Glide.with(context)
-                                .asBitmap().load(headlines.get(position).getUrlToImage())
-                                .into(new CustomTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-
-                                    }
-
-
-
-                                } ));*/
-
-                       /* Picasso.get().load(headlines.get(position).getUrlToImage()).into(getTarget(imageData));*/
-
-                        /*user.ImagesData = Converters.convertImage2ByteArray(bitmap);*/
-                      /*  user.ImageUrl = imageData;*/
-
+                        user.ImageUrl = imgData;
                         user.firstName = AuthorName;
                         user.lastName = Description;
-
-                        if(!verifyPermission()) {
-                            return;
-                        }
-
-                        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" ;
-                        final File dir = new File(dirPath);
-
-                        final String fileName = imageData.substring(imageData.lastIndexOf('/' ) + 1);
-
-                        Glide.with(context).load(headlines.get(position).getUrlToImage()).into(new CustomTarget<Drawable>() {
-                            @Override
-                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-
-                                Bitmap bit = ((BitmapDrawable) resource).getBitmap();
-                                Toast.makeText(context, "Saving Image..!", Toast.LENGTH_SHORT).show();
-                                saveImage(bit ,dir ,fileName);
-                            }
-
-
-
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                            }
-
-                            @Override
-                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                                super.onLoadFailed(errorDrawable);
-
-                                Toast.makeText(context, "Failed to download image. Please try again later!", Toast.LENGTH_SHORT).show();
-
-                            }
-                        });
-
-                        Glide.with(context).load(headlines.get(position).getUrlToImage())
-                                .thumbnail(0.5f)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .into(new CustomTarget<Drawable>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                        image.setImageDrawable(resource);
-                                        image.setDrawingCacheEnabled(true);
-                                        saveImage();
-                                    }
-
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                                    }
-
-                                });
-                               /* {
-                                    @Override
-                                    public void onResourceReady(GlideDrawable glideDrawable, GlideAnimation<? super GlideDrawable> glideAnimation) {
-                                        apd_image.setImageDrawable(glideDrawable);
-                                        apd_image.setDrawingCacheEnabled(true);
-                                        saveImage();
-                                    }});*/
-
 
                         PopulateAsynTask pop = new PopulateAsynTask();
                         pop.execute(user);
@@ -290,44 +187,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomViewHolder> {
                 });
             }
 
-         /*   private Target getTarget(String url) {
-                Target target = new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                File file = new File(Environment.getExternalStorageState().getClass() + "/" + url);
-                                try{
-                                    file.createNewFile();
-                                    try  {
-                                        FileOutputStream fileOutputStream = new FileOutputStream(file);
-                                        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, fileOutputStream);
-                                        fileOutputStream.flush();
-                                        fileOutputStream.close();
-                                    } catch (IOException e) {
-                                        Log.e("IOException", e.getLocalizedMessage());
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }).start();
-                    }
 
-                    @Override
-                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                    }
-                };
-                return target;
-            }
-            */
 
 
         });

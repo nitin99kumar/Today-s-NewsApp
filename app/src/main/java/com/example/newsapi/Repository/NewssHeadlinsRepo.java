@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
 
 import com.example.newsapi.DB.DAO;
 import com.example.newsapi.DB.MyDataBase;
@@ -31,6 +32,10 @@ public class NewssHeadlinsRepo {
         return getAllData();
     }
 
+    public void deleteWord(User user)  {
+        new deleteWordAsyncTask((DAO) userDao).execute(user);
+    }
+
   /*  public void insertUsers(final User users) {
         new InsertAsynTesk<Void, Void, Void>() {
             @Override
@@ -54,5 +59,19 @@ public class NewssHeadlinsRepo {
        }
 
    }
+
+    private static class deleteWordAsyncTask extends AsyncTask<User, Void, Void> {
+        private DAO mAsyncTaskDao;
+
+        deleteWordAsyncTask(DAO dao) {
+            mAsyncTaskDao = (DAO) dao;
+        }
+
+        @Override
+        protected Void doInBackground(final User... params) {
+            mAsyncTaskDao.delete(params[0]);
+            return null;
+        }
+    }
 
 }

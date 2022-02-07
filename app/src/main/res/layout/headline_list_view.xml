@@ -11,7 +11,7 @@
     <LinearLayout
 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:layout_weight="4"
         android:layout_margin="6dp"
         android:orientation="horizontal">
@@ -19,17 +19,19 @@
         <LinearLayout
 
             android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
             >
 
             <TextView
                 android:id="@+id/text_title"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:textSize="22sp"
+                android:textSize="17sp"
                 android:layout_marginBottom="20sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
@@ -40,23 +42,32 @@
             <TextView
                 android:id="@+id/text_source"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 android:layout_marginBottom="10dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#F8CC0D"
-                android:maxLines="3"
+                android:maxLines="2"
                 />
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/image_headlines"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:layout_weight="3"
-            />
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/image_headlines"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:layout_weight="3"
+                />
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
